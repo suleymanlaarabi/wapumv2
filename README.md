@@ -41,10 +41,3 @@ We welcome contributions to Wapum. To contribute:
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a pull request
-
-## Connect
-
-Questions or feedback? Reach out to us:
-
-- Email: suleyman.laarabi.dev@gmail.com
-- Portfolio: [suleyman-portfolio](https://suleymanportfolio.web.app)
