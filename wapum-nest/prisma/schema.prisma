@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String         @id @default(cuid())
+  email               String         @unique
+  username            String         @unique
+  firstName           String
+  lastName            String
+  avatar              String         @default("avatar")
+  age                 Int
+  phone               String
+  password            String
+  isResettingPassword Boolean        @default(false)
+  resetPasswordToken  String?        @unique
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  conversations       Conversation[]
+  sendMessages        ChatMessage[]
+  posts               Ad[]
+}
+
+model Conversation {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  messages     ChatMessage[]
+  participants User[]
+}
+
+model ChatMessage {
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  content        String
+  sender         User         @relation(fields: [senderId], references: [id])
+  senderId       String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+enum State {
+  NEW
+  USED
+  BROKEN
+}
+
+enum Category {
+  HOME
+  FASHION
+  SPORTS
+  AUTOMOBILE
+  SERVICES
+  JOBS
+  TECHNOLOGY
+  OTHER
+}
+
+enum SubCategory {
+  // Home
+  FURNITURE
+  ELECTRONICS
+  APPLIANCES
+  DECORATIONS
+  GARDEN
+  // Technology
+  PHONE
+  LAPTOP
+  TABLET
+  TV
+  CAMERA
+  HEADPHONE
+  SPEAKER
+  // Fashion
+  TSHIRT
+  SHOES
+  PANTS
+  DRESS
+  JACKET
+  ACCESSORIES
+  //  Sports
+  FOOTBALL
+  BASKETBALL
+  TENNIS
+  GOLF
+  VOLLEYBALL
+  //  Automobile
+  CAR
+  MOTORCYCLE
+  SCOOTER
+  BICYCLE
+  TRUCK
+  BOAT
+  PARTS
+  //  Services
+  CLEANING
+  REPAIR
+  TUTORING
+  //  Jobs
+  FULLTIME
+  PARTTIME
+  INTERNSHIP
+  //  Other
+  OTHER
+}
+
+model Ad {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  published   Boolean?    @default(false)
+  state       State
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String
+  category    Category
+  subCategory SubCategory
+  city        String
+  ZIP         Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  AdImages    AdImage[]
+
+  @@index([authorId])
+  @@index([category])
+  @@index([subCategory])
+}
+
+model AdImage {
+  id        String   @id
+  ad        Ad       @relation(fields: [adId], references: [id])
+  adId      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
