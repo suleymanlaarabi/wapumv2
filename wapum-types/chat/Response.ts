@@ -16,17 +16,13 @@ export interface GetConversationsResponse extends Response {
 }
 
 export interface CreateConversationResponse extends Response {
-  data: {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  data: Conversation;
 }
 
 export interface GetConversationMessagesResponse extends Response {
   data: {
     id: string;
-    updatedAt: Date;
+    createdAt: Date;
     messages: Message[];
     participants: {
       id: string;

@@ -4,7 +4,11 @@ import { SendChatDto } from 'src/chat/dto/send-chat.dto';
 import { PrismaService } from 'src/prisma.service';
 import { SocketService } from 'src/socket/socket.service';
 import { ConversationError } from 'src/wapum-types/chat/Error';
-import { SendChatResponse } from 'src/wapum-types/chat/Response';
+import {
+  CreateConversationResponse,
+  GetConversationMessagesResponse,
+  SendChatResponse,
+} from 'src/wapum-types/chat/Response';
 
 @Injectable()
 export class ChatService {
@@ -81,19 +85,10 @@ export class ChatService {
         conversations: {
           select: {
             id: true,
-            participants: {
-              select: {
-                id: true,
-                username: true,
-                lastName: true,
-                phone: true,
-                avatar: true,
-              },
-            },
             messages: {
               select: {
-                content: true,
                 id: true,
+                content: true,
                 createdAt: true,
                 sender: {
                   select: {
@@ -102,9 +97,17 @@ export class ChatService {
                 },
               },
               take: 1,
-
               orderBy: {
                 createdAt: 'asc',
+              },
+            },
+            participants: {
+              select: {
+                id: true,
+                username: true,
+                lastName: true,
+                phone: true,
+                avatar: true,
               },
             },
           },
@@ -123,13 +126,17 @@ export class ChatService {
       data: existingUser.conversations,
     };
   }
-  async getConversation(userId: string, conversationId: string) {
+  async getConversation(
+    userId: string,
+    conversationId: string,
+    page: number,
+  ): Promise<GetConversationMessagesResponse> {
     const existingConversation =
       await this.prismaService.conversation.findUnique({
         where: { id: conversationId },
         select: {
           id: true,
-          updatedAt: true,
+          createdAt: true,
           participants: {
             select: {
               id: true,
@@ -146,10 +153,11 @@ export class ChatService {
                 },
               },
             },
-            take: 30,
             orderBy: {
-              createdAt: 'asc',
+              createdAt: 'desc',
             },
+            take: 15,
+            skip: 15 * (page - 1),
           },
         },
       });
@@ -157,6 +165,8 @@ export class ChatService {
     if (!existingConversation) {
       throw new HttpException(ConversationError.CONVERSATION_NOT_FOUND, 404);
     }
+
+    existingConversation.messages = existingConversation.messages.reverse();
 
     return {
       error: false,
@@ -168,7 +178,7 @@ export class ChatService {
   async createConversation(
     createConversationDto: CreateConversationDto,
     userId: string,
-  ) {
+  ): Promise<CreateConversationResponse> {
     const existingConversation =
       await this.prismaService.conversation.findFirst({
         where: {
@@ -192,6 +202,30 @@ export class ChatService {
       data: {
         participants: {
           connect: [{ id: userId }, { id: createConversationDto.recipientId }],
+        },
+      },
+      select: {
+        id: true,
+        messages: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            sender: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+        participants: {
+          select: {
+            id: true,
+            username: true,
+            lastName: true,
+            phone: true,
+            avatar: true,
+          },
         },
       },
     });

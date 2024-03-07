@@ -21,16 +21,14 @@ import { useFileInput } from "../../../../hooks/useFileInput";
 import { updateUserProfilePicture } from "../../../../services/api/user-api";
 import { useAuthStore } from "../../../../store/AuthStore";
 import { getMediaUrl } from "../../../../utils/urlParser";
-import { PasswordWithEye } from "../../../common/inputs/PasswordWithEye";
 
 type UserProfileInput = {
   username: string;
   email: string;
-  password: string;
 };
 
 export default function UserProfileEdit() {
-  const { user } = useAuthStore();
+  const { user, updateCurrentUserProfilePicture } = useAuthStore();
 
   const [currentProfilePicture, setCurrentProfilePicture] = useState<{
     file: File | null;
@@ -60,7 +58,12 @@ export default function UserProfileEdit() {
 
   const onSubmit = async (data: UserProfileInput) => {
     if (currentProfilePicture.file) {
-      await updateUserProfilePicture(currentProfilePicture.file);
+      try {
+        await updateUserProfilePicture(currentProfilePicture.file);
+        updateCurrentUserProfilePicture(currentProfilePicture.file);
+      } catch (error) {
+        console.log(error);
+      }
     }
     if (
       data.username &&
@@ -160,18 +163,9 @@ export default function UserProfileEdit() {
             {errors.username &&
               errorRenderer(errors.username.message as string)}
           </FormControl>
-          <FormControl id="password" isRequired>
-            <FormLabel>Password</FormLabel>
-            <PasswordWithEye
-              placeholder="Password"
-              {...register("password", {
-                maxLength: { value: 20, message: "Max length should be 20" },
-                minLength: { value: 8, message: "Min length should be 8" },
-              })}
-            />
-            {errors.password &&
-              errorRenderer(errors.password.message as string)}
-          </FormControl>
+          <Button onClick={() => console.log("clicked")}>
+            Change Password
+          </Button>
           <Stack spacing={6} direction={["column", "row"]}>
             <Button
               bg={"red.400"}

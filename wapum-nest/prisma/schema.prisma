@@ -41,6 +41,7 @@ model ChatMessage {
   content        String
   sender         User         @relation(fields: [senderId], references: [id])
   senderId       String
+  img            String?
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
 

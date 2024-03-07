@@ -26,12 +26,6 @@ export class AppGateway implements OnGatewayInit, OnModuleInit {
     this.server.emit('confirmation');
   }
 
-  @SubscribeMessage('message')
-  sendMessage(@MessageBody() data, @ConnectedSocket() socket: Socket) {
-    console.log('message sent');
-    socket.emit('test', 'test');
-  }
-
   @SubscribeMessage('join-chat-room')
   async joinChatRoom(
     @MessageBody() conversationId: string,

@@ -25,7 +25,6 @@ function AdCard({ title, price, isNew, preview, id }: AdCardProps) {
     <Flex
       as={NavLink}
       to={`/ad/${id}`}
-      w="full"
       transition={"transform .3s"}
       alignItems="center"
       justifyContent="center"

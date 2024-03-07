@@ -16,16 +16,17 @@ import {
 import { ChangeEvent, useState } from "react";
 import { errorToast, successToast } from "../../../data/toast";
 import { searchUsers } from "../../../services/api/user-api";
-import { useChatsStore } from "../../../store/ChatStore";
 
 export type SearchUsersModalProps = {
   onClose: () => void;
   isOpen: boolean;
+  addConversation: (userId: string) => Promise<void>;
 };
 
 export const SearchUsersModal = ({
   onClose,
   isOpen,
+  addConversation,
 }: SearchUsersModalProps) => {
   const [users, setUsers] = useState<{ username: string; id: string }[]>([]);
   const [userSelected, setUserSelected] = useState<{
@@ -34,8 +35,6 @@ export const SearchUsersModal = ({
   } | null>(null);
 
   const toast = useToast();
-
-  const { addConversation } = useChatsStore();
 
   const onAddUser = async () => {
     if (userSelected) {

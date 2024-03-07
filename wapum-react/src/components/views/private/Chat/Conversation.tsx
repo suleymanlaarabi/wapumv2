@@ -1,50 +1,29 @@
 import { Button, Flex, Heading, Input } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
-import {
-  getConversationChats,
-  sendChat,
-} from "../../../../services/api/chat-api";
-import { useSocketStore } from "../../../../store/SocketStore";
-import { Message } from "../../../../wapum-types/chat/chat.types";
+import { useKeyPressEvent } from "react-use";
+import { useConversation } from "../../../../hooks/useConversation";
+import { sendChat } from "../../../../services/api/chat-api";
 import { MessageListContainer } from "./MessageListContainer";
 
 export const Conversation = () => {
   const { id: conversationId } = useParams<{ id: string }>() as { id: string };
 
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  useEffect(() => {
-    getConversationChats(conversationId).then((data) => {
-      setMessages(data.data.messages);
-    });
-  }, [conversationId]);
+  const { state, setNewMessageRead, addMessages } =
+    useConversation(conversationId);
 
   const messageInputRef = useRef<HTMLInputElement>(null);
 
-  const handleMessageSend = () => {
+  const handleMessageSend = useCallback(() => {
     if (messageInputRef.current) {
       sendChat(conversationId, messageInputRef.current.value);
       messageInputRef.current.value = "";
     }
-  };
+  }, [conversationId]);
 
-  const { socket, isSocketConnected } = useSocketStore();
+  useKeyPressEvent("Enter", handleMessageSend);
 
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.emit("join-chat-room", conversationId);
-    socket.on("send-chat-update", (messageData: Message) => {
-      setMessages((prevMessages) => [...prevMessages, messageData]);
-      console.log("Message received", messageData);
-    });
-
-    return () => {
-      socket.off("send-chat-update");
-    };
-  }, [socket, conversationId]);
-  console.log("Socket connected", isSocketConnected);
+  console.log("rendering conversation component");
 
   return (
     <>
@@ -57,13 +36,20 @@ export const Conversation = () => {
       >
         <Heading mt={4}>Conversation</Heading>
 
-        <MessageListContainer messages={messages} />
+        {state.messagesList.messages.length !== 0 && (
+          <MessageListContainer
+            haveNewMessage={state.haveNewMessage}
+            setHaveNewMessage={setNewMessageRead}
+            messages={state.messagesList.messages}
+            onScrollTopIsReached={addMessages}
+          />
+        )}
         <Flex
           gap={4}
           justifyContent={"space-around"}
           alignItems={"center"}
           w={"90%"}
-          maxW={"700px"}
+          maxW={"550px"}
         >
           <Input ref={messageInputRef} w={"80%"} />
           <Button onClick={handleMessageSend} w={"30%"}>

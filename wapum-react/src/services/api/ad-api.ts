@@ -47,7 +47,7 @@ export const addAdPicture = async (adId: string, files: File[]) => {
 export const getAdsByCategory = async (category: Categories) => {
   const res = await fetch(BACKEND_API_URL + `ads/category/${category}`);
   const result = await res.json();
-  return result;
+  return result as AdPreview[];
 };
 
 export const getAd = async (id: string) => {

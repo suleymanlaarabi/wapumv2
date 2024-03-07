@@ -1,74 +1,76 @@
 export enum JobsSubCategory {
-  FULLTIME = 'FULLTIME',
-  PARTTIME = 'PARTTIME',
-  INTERNSHIP = 'INTERNSHIP',
-  OTHER = 'OTHER',
+  FULLTIME = "FULLTIME",
+  PARTTIME = "PARTTIME",
+  INTERNSHIP = "INTERNSHIP",
+  OTHER = "OTHER",
 }
 
 export enum ServicesSubCategory {
-  CLEANING = 'CLEANING',
-  REPAIR = 'REPAIR',
-  TUTORING = 'TUTORING',
-  OTHER = 'OTHER',
+  CLEANING = "CLEANING",
+  REPAIR = "REPAIR",
+  TUTORING = "TUTORING",
+  OTHER = "OTHER",
 }
 
 export enum AutomobileSubCategory {
-  CAR = 'CAR',
-  MOTORCYCLE = 'MOTORCYCLE',
-  BICYCLE = 'BICYCLE',
-  TRUCK = 'TRUCK',
-  BOAT = 'BOAT',
-  PARTS = 'PARTS',
-  OTHER = 'OTHER',
+  CAR = "CAR",
+  MOTORCYCLE = "MOTORCYCLE",
+  BICYCLE = "BICYCLE",
+  TRUCK = "TRUCK",
+  BOAT = "BOAT",
+  PARTS = "PARTS",
+  OTHER = "OTHER",
 }
 
 export enum FashionSubCategory {
-  TSHIRT = 'TSHIRT',
-  SHOES = 'SHOES',
-  PANTS = 'PANTS',
-  DRESS = 'DRESS',
-  JACKET = 'JACKET',
-  ACCESSORIES = 'ACCESSORIES',
-  OTHER = 'OTHER',
+  TSHIRT = "TSHIRT",
+  SHOES = "SHOES",
+  PANTS = "PANTS",
+  DRESS = "DRESS",
+  JACKET = "JACKET",
+  ACCESSORIES = "ACCESSORIES",
+  OTHER = "OTHER",
 }
 
 export enum TechnologySubCategory {
-  PHONE = 'PHONE',
-  LAPTOP = 'LAPTOP',
-  TABLET = 'TABLET',
-  TV = 'TV',
-  CAMERA = 'CAMERA',
-  HEADPHONE = 'HEADPHONE',
-  SPEAKER = 'SPEAKER',
-  OTHER = 'OTHER',
+  PHONE = "PHONE",
+  LAPTOP = "LAPTOP",
+  TABLET = "TABLET",
+  TV = "TV",
+  CAMERA = "CAMERA",
+  HEADPHONE = "HEADPHONE",
+  SPEAKER = "SPEAKER",
+  OTHER = "OTHER",
 }
 
 export enum SportsSubCategory {
-  FOOTBALL = 'FOOTBALL',
-  BASKETBALL = 'BASKETBALL',
-  TENNIS = 'TENNIS',
-  GOLF = 'GOLF',
-  VOLLEYBALL = 'VOLLEYBALL',
-  OTHER = 'OTHER',
+  FOOTBALL = "FOOTBALL",
+  BASKETBALL = "BASKETBALL",
+  TENNIS = "TENNIS",
+  GOLF = "GOLF",
+  VOLLEYBALL = "VOLLEYBALL",
+  OTHER = "OTHER",
 }
 
 export enum HomeSubCategory {
-  FURNITURE = 'FURNITURE',
-  ELECTRONICS = 'ELECTRONICS',
-  APPLIANCES = 'APPLIANCES',
-  DECORATIONS = 'DECORATIONS',
-  GARDEN = 'GARDEN',
-  OTHER = 'OTHER',
+  FURNITURE = "FURNITURE",
+  ELECTRONICS = "ELECTRONICS",
+  APPLIANCES = "APPLIANCES",
+  DECORATIONS = "DECORATIONS",
+  GARDEN = "GARDEN",
+  OTHER = "OTHER",
 }
 
 export enum Categories {
-  HOME = 'HOME',
-  TECHNOLOGY = 'TECHNOLOGY',
-  FASHION = 'FASHION',
-  AUTOMOBILE = 'AUTOMOBILE',
-  SERVICES = 'SERVICES',
-  JOBS = 'JOBS',
+  HOME = "HOME",
+  TECHNOLOGY = "TECHNOLOGY",
+  FASHION = "FASHION",
+  AUTOMOBILE = "AUTOMOBILE",
+  SERVICES = "SERVICES",
+  JOBS = "JOBS",
 }
+
+export const categories = Object.values(Categories);
 
 type SubCategories =
   | JobsSubCategory
@@ -79,9 +81,9 @@ type SubCategories =
   | HomeSubCategory;
 
 export enum AdProductState {
-  NEW = 'NEW',
-  USED = 'USED',
-  BROKEN = 'BROKEN',
+  NEW = "NEW",
+  USED = "USED",
+  BROKEN = "BROKEN",
 }
 
 export interface Ad {

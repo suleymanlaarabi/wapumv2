@@ -7,11 +7,15 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Filter, MessageSquarePlus } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import {
+  createConversation,
+  getConversations,
+} from "../../../../services/api/chat-api";
 import { useAuthStore } from "../../../../store/AuthStore";
-import { useChatsStore } from "../../../../store/ChatStore";
 import { getMediaUrl } from "../../../../utils/urlParser";
 import {
   Conversation,
@@ -60,12 +64,33 @@ function ChatConversationButton({
 
 export const MyChats = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { conversations } = useChatsStore();
   const { user } = useAuthStore() as { user: User };
+
+  const { data } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: () => getConversations(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const handleCreateConversation = async (userId: string) => {
+    const conversation = await createConversation(userId);
+    queryClient.setQueryData(["conversations"], () => {
+      if (data) {
+        return {
+          data: [...data.data, conversation],
+        };
+      }
+    });
+  };
 
   return (
     <>
-      <SearchUsersModal isOpen={isOpen} onClose={onClose} />
+      <SearchUsersModal
+        addConversation={handleCreateConversation}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       <motion.div
         initial={{ y: -20 }}
         animate={{ y: 0 }}
@@ -92,7 +117,7 @@ export const MyChats = () => {
           </Flex>
         </Flex>
       </motion.div>
-      {conversations.map((conversation) => (
+      {data?.data.map((conversation) => (
         <ChatConversationButton
           conversation={conversation}
           user={user}

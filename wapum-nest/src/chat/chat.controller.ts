@@ -58,14 +58,16 @@ export class ChatController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('get-conversation/:conversationId')
+  @Get('get-conversation/:conversationId/:page')
   async getConversation(
     @Param('conversationId') conversationId: string,
+    @Param('page') page: number,
     @Request() request: RequestWithAuthPayload,
   ): Promise<GetConversationMessagesResponse> {
     return await this.chatService.getConversation(
       request.user.userId,
       conversationId,
+      page,
     );
   }
 }

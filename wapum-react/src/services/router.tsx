@@ -9,6 +9,7 @@ import { AdView } from "../components/views/public/AdView";
 import { AuthChecker } from "../components/views/public/Auth/AuthChecker";
 import SignIn from "../components/views/public/Auth/SignIn";
 import SignUp from "../components/views/public/Auth/SignUp";
+import { CategoryView } from "../components/views/public/CategoryView";
 import { Home } from "../components/views/public/Home";
 
 export const router = createBrowserRouter([
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
         element: <AdView />,
       },
       {
+        path: "/category/:category",
+        element: <CategoryView />,
+      },
+      {
         path: "/auth",
         element: <AuthChecker />,
         children: [
@@ -38,6 +43,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+
       {
         path: "/private",
         element: <PrivateAuthChecker />,

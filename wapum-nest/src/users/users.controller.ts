@@ -52,6 +52,7 @@ export class UsersController {
   @Get('/me')
   async getAuthenticatedUser(@Request() req: RequestWithAuthPayload) {
     const data = await this.usersService.getUserById(req.user.userId);
+    if (!data) throw new Error('User not found');
     return data;
   }
 

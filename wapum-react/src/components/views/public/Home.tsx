@@ -1,8 +1,10 @@
-import { Box, Flex, Heading, Spinner } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { AdPreview, getHomeAds } from "../../../services/api/ad-api";
+import { categories } from "../../../wapum-types/ads/Ads.types";
 import AdCard from "../../common/card/AdCard";
+import { CategoryCard } from "../../common/card/CategoryCard";
 
 export const HomeCardList = ({ cards }: { cards: AdPreview[] }) => {
   return (
@@ -11,7 +13,7 @@ export const HomeCardList = ({ cards }: { cards: AdPreview[] }) => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Flex py={8} px={4} w="100%" gap={4} overflowX={"scroll"}>
+      <Flex py={8} w="100%" gap={4} overflowX={"scroll"}>
         {cards.map((ad) => (
           <AdCard
             id={ad.id}
@@ -32,14 +34,22 @@ export const Home = () => {
     queryKey: ["home"],
     queryFn: getHomeAds,
   });
-  console.log(data);
+
+  console.log("rendering home component");
   return (
-    <>
+    <Container maxW={"container.xl"} p={4}>
       {isLoading ? (
         <Spinner />
       ) : (
         <>
-          <Box p={4} w={"full"}>
+          <Heading m={4}>Top Categories</Heading>
+          <Flex p={4} mt={4} w="100%" gap={4} overflowX={"scroll"}>
+            {categories.map((category) => (
+              <CategoryCard name={category} key={category} />
+            ))}
+          </Flex>
+
+          <Box w={"full"}>
             <Heading m={4}>Home</Heading>
             {data && (
               <>
@@ -47,7 +57,7 @@ export const Home = () => {
               </>
             )}
           </Box>
-          <Box p={4} w={"full"}>
+          <Box w={"full"}>
             <Heading m={4}>Technology</Heading>
             {data && (
               <>
@@ -57,6 +67,6 @@ export const Home = () => {
           </Box>
         </>
       )}
-    </>
+    </Container>
   );
 };

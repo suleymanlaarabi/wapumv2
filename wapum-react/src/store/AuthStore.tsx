@@ -6,19 +6,27 @@ import {
 } from "../services/api/auth-api";
 import { CreateUserForm, LoginUserForm } from "../wapum-types/auth/Form";
 import { User } from "../wapum-types/users/global";
-import { useChatsStore } from "./ChatStore";
 
 interface AuthStore {
   user: User | null;
+  updateCurrentUserProfilePicture: (file: File) => Promise<void>;
   register: (userForm: CreateUserForm) => Promise<void>;
   login: (loginForm: LoginUserForm) => Promise<void>;
   logout: () => void;
   init: () => void;
 }
 
+function getUserInLocalStorage() {
+  const user = localStorage.getItem("user");
+  if (user) {
+    return JSON.parse(user);
+  }
+  return null;
+}
+
 export const useAuthStore: UseBoundStore<StoreApi<AuthStore>> = create(
   (set) => ({
-    user: null,
+    user: getUserInLocalStorage(),
 
     register: async (user) => {
       const response = await registerAuthApi(user);
@@ -37,23 +45,30 @@ export const useAuthStore: UseBoundStore<StoreApi<AuthStore>> = create(
       localStorage.removeItem("access_token");
     },
 
-    init: () => {
-      if (!localStorage.getItem("access_token")) return;
-      if (localStorage.getItem("user")) {
-        set({ user: JSON.parse(localStorage.getItem("user")!) });
-      }
-      try {
-        getAuthenticatedUser().then((user) => {
-          if (user) {
-            set({ user });
-            localStorage.setItem("user", JSON.stringify(user));
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    updateCurrentUserProfilePicture: async (file: File) => {
+      set((state) => {
+        if (!state.user) return state;
+        return {
+          ...state,
+          user: { ...state.user, avatar: URL.createObjectURL(file) },
+        };
+      });
+    },
 
-      useChatsStore.getState().init();
+    init: async () => {
+      if (!localStorage.getItem("access_token")) return;
+      try {
+        const user = await getAuthenticatedUser();
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+          set({
+            user,
+          });
+          return;
+        }
+      } catch (error) {
+        console.log("Error", error);
+      }
     },
   })
 );

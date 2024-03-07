@@ -1,5 +1,6 @@
 import { BACKEND_API_URL } from "../../data/dev.variable";
 import {
+  CreateConversationResponse,
   GetConversationMessagesResponse,
   GetConversationsResponse,
   SendChatResponse,
@@ -19,7 +20,7 @@ export const createConversation = async (recipientId: string) => {
   );
   const data = await response.json();
   if (!response.ok) throw new Error(data.message);
-  return data;
+  return data as CreateConversationResponse;
 };
 
 export const getConversations = async () => {
@@ -32,10 +33,11 @@ export const getConversations = async () => {
 };
 
 export const getConversationChats = async (
-  conversationId: string
+  conversationId: string,
+  page: number
 ): Promise<GetConversationMessagesResponse> => {
   const response = await fetchWithAuth(
-    BACKEND_API_URL + "chat/get-conversation/" + conversationId
+    BACKEND_API_URL + "chat/get-conversation/" + conversationId + "/" + page
   );
   const data = await response.json();
   if (!response.ok) throw new Error(data.message);
