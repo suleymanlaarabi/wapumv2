@@ -35,6 +35,8 @@ export class UsersService {
       },
     });
 
+    if (!user) throw new HttpException(UsersError.USER_NOT_FOUND, 404);
+
     return user;
   }
 

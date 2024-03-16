@@ -1,10 +1,24 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { createId } from '@paralleldrive/cuid2';
-import { Category } from '@prisma/client';
 import { FileService } from 'src/file/file.service';
 import { PrismaService } from 'src/prisma.service';
+import { GetAdResponse } from 'src/wapum-types/ads/Response';
 import { AdsError } from '../wapum-types/ads/Ads.error';
 import { CreateAdDto } from './dto/CreateAd.dto';
+import { getFilteredAdsDto } from './dto/GetFilteredAds.dto';
+
+const adPrismaSelect = {
+  id: true,
+  title: true,
+  description: true,
+  price: true,
+  published: true,
+  category: true,
+  subCategory: true,
+  state: true,
+  authorId: true,
+  location: true,
+};
 
 @Injectable()
 export class AdsService {
@@ -63,20 +77,13 @@ export class AdsService {
     return adPicture;
   }
 
-  async getAd(id: string) {
+  async getAd(id: string): Promise<GetAdResponse> {
     const ad = await this.prismaService.ad.findUnique({
       where: {
         id,
       },
       select: {
-        id: true,
-        title: true,
-        description: true,
-        price: true,
-        published: true,
-        category: true,
-        subCategory: true,
-        state: true,
+        ...adPrismaSelect,
         AdImages: {
           select: {
             id: true,
@@ -92,25 +99,21 @@ export class AdsService {
     return ad;
   }
 
-  async getAdsByCategory(category: Category) {
+  async getAdsByCategory(category: string): Promise<GetAdResponse[]> {
     const ads = await this.prismaService.ad.findMany({
       where: {
         category,
       },
       select: {
-        id: true,
-        title: true,
-        description: true,
-        price: true,
-        published: true,
-        category: true,
-        subCategory: true,
-        state: true,
+        ...adPrismaSelect,
         AdImages: {
           select: {
             id: true,
           },
           take: 1,
+          orderBy: {
+            id: 'desc',
+          },
         },
       },
       take: 10,
@@ -119,20 +122,46 @@ export class AdsService {
     return ads;
   }
 
-  async getLatestAds(category: Category) {
+  async getAdsWithFilter({
+    title,
+    category,
+    subCategory,
+    priceRange,
+  }: getFilteredAdsDto): Promise<GetAdResponse[]> {
+    const ads = await this.prismaService.ad.findMany({
+      where: {
+        title: {
+          contains: title,
+        },
+        category: category || undefined,
+        subCategory: subCategory || undefined,
+        price: {
+          gte: priceRange.min,
+          lte: priceRange.max,
+        },
+      },
+      select: {
+        ...adPrismaSelect,
+        AdImages: {
+          select: {
+            id: true,
+          },
+          take: 1,
+        },
+      },
+    });
+
+    return ads;
+  }
+
+  async getLatestAds(category: string): Promise<GetAdResponse[]> {
     const ads = await this.prismaService.ad.findMany({
       where: {
         category,
       },
       select: {
-        id: true,
-        title: true,
-        description: true,
-        price: true,
-        published: true,
-        category: true,
-        subCategory: true,
-        state: true,
+        ...adPrismaSelect,
+
         AdImages: {
           select: {
             id: true,

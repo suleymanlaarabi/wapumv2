@@ -1,9 +1,17 @@
-import { Button, Flex, Heading, Input } from "@chakra-ui/react";
-import { useCallback, useRef } from "react";
+import {
+  Button,
+  Flex,
+  Heading,
+  Input,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { useCallback, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useKeyPressEvent } from "react-use";
+import { useKey } from "react-use";
 import { useConversation } from "../../../../hooks/useConversation";
 import { sendChat } from "../../../../services/api/chat-api";
+import { ImageCard } from "../../../common/card/ImageCard";
+import { MessageImageButton } from "./MessageImageButton";
 import { MessageListContainer } from "./MessageListContainer";
 
 export const Conversation = () => {
@@ -12,6 +20,7 @@ export const Conversation = () => {
   const { state, setNewMessageRead, addMessages } =
     useConversation(conversationId);
 
+  const [currentMessageImages, setCurrentMessageImages] = useState<File[]>([]);
   const messageInputRef = useRef<HTMLInputElement>(null);
 
   const handleMessageSend = useCallback(() => {
@@ -21,7 +30,7 @@ export const Conversation = () => {
     }
   }, [conversationId]);
 
-  useKeyPressEvent("Enter", handleMessageSend);
+  useKey("Enter", handleMessageSend, {}, [messageInputRef.current]);
 
   console.log("rendering conversation component");
 
@@ -45,16 +54,51 @@ export const Conversation = () => {
           />
         )}
         <Flex
-          gap={4}
+          bg={useColorModeValue("gray.100", "gray.700")}
+          p={6}
+          borderRadius={8}
           justifyContent={"space-around"}
           alignItems={"center"}
           w={"90%"}
           maxW={"550px"}
+          direction={"column"}
         >
-          <Input ref={messageInputRef} w={"80%"} />
-          <Button onClick={handleMessageSend} w={"30%"}>
-            Send
-          </Button>
+          <Flex wrap={"wrap"} gap={4}>
+            {currentMessageImages.map((file, index) => (
+              <ImageCard
+                chakraProps={{
+                  w: "150px",
+                  h: "150px",
+                }}
+                key={index}
+                onDelete={() =>
+                  setCurrentMessageImages((prev) =>
+                    prev.filter((_, i) => i !== index)
+                  )
+                }
+                src={URL.createObjectURL(file)}
+              />
+            ))}
+          </Flex>
+          <Flex gap={4} justifyContent={"space-around"} w={"100%"}>
+            <MessageImageButton
+              onUpload={(file) => {
+                setCurrentMessageImages([...currentMessageImages, ...file]);
+              }}
+            />
+            <Input
+              bg={useColorModeValue("white", "gray.800")}
+              ref={messageInputRef}
+              w={"80%"}
+            />
+            <Button
+              bg={useColorModeValue("gray.200", "gray.600")}
+              onClick={handleMessageSend}
+              w={"30%"}
+            >
+              Send
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </>

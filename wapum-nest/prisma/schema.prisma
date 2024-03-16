@@ -44,9 +44,18 @@ model ChatMessage {
   img            String?
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
+  ChatImage      ChatImage[]
 
   @@index([conversationId])
   @@index([senderId])
+}
+
+model ChatImage {
+  id        String      @id
+  message   ChatMessage @relation(fields: [messageId], references: [id])
+  messageId String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 enum State {
@@ -55,80 +64,20 @@ enum State {
   BROKEN
 }
 
-enum Category {
-  HOME
-  FASHION
-  SPORTS
-  AUTOMOBILE
-  SERVICES
-  JOBS
-  TECHNOLOGY
-  OTHER
-}
-
-enum SubCategory {
-  // Home
-  FURNITURE
-  ELECTRONICS
-  APPLIANCES
-  DECORATIONS
-  GARDEN
-  // Technology
-  PHONE
-  LAPTOP
-  TABLET
-  TV
-  CAMERA
-  HEADPHONE
-  SPEAKER
-  // Fashion
-  TSHIRT
-  SHOES
-  PANTS
-  DRESS
-  JACKET
-  ACCESSORIES
-  //  Sports
-  FOOTBALL
-  BASKETBALL
-  TENNIS
-  GOLF
-  VOLLEYBALL
-  //  Automobile
-  CAR
-  MOTORCYCLE
-  SCOOTER
-  BICYCLE
-  TRUCK
-  BOAT
-  PARTS
-  //  Services
-  CLEANING
-  REPAIR
-  TUTORING
-  //  Jobs
-  FULLTIME
-  PARTTIME
-  INTERNSHIP
-  //  Other
-  OTHER
-}
-
 model Ad {
-  id          String      @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String
   price       Float
-  published   Boolean?    @default(false)
+  published   Boolean?  @default(false)
   state       State
-  author      User        @relation(fields: [authorId], references: [id])
+  author      User      @relation(fields: [authorId], references: [id])
   authorId    String
-  category    Category
-  subCategory SubCategory
-  city        String
-  ZIP         Int
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  category    String
+  subCategory String
+  location    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   AdImages    AdImage[]
 
   @@index([authorId])

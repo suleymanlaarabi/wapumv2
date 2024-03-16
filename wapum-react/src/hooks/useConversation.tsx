@@ -74,7 +74,7 @@ export const useConversation = (conversationId: string) => {
     socket.on("send-chat-update", (messageData: Message) => {
       setState((prev) => ({
         ...prev,
-        haveNewMessage: true,
+        haveNewMessage: state.messagesList.messages.length >= 8,
         messagesList: {
           page: prev.messagesList.page,
           messages: [...prev.messagesList.messages, messageData],
@@ -85,7 +85,7 @@ export const useConversation = (conversationId: string) => {
     return () => {
       socket.off("send-chat-update");
     };
-  }, [socket, conversationId]);
+  }, [socket, conversationId, state.messagesList.messages.length]);
 
   return {
     state,

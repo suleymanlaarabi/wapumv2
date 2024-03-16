@@ -75,28 +75,6 @@ export const getHomeAds = async (): Promise<HomeAds> => {
   };
 };
 
-export interface AdFilter {
-  title: string | undefined;
-  category: Categories | undefined;
-  subCategory: string | undefined;
-  priceRange: { min: number; max: number } | undefined;
-}
-
-export const getAdsWithFilter = async (filter: AdFilter) => {
-  const res = await fetch(BACKEND_API_URL + `ads/filter`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(filter),
-  });
-  const result = await res.json();
-  if (!res.ok) {
-    throw new Error(result.message);
-  }
-  return result as AdPreview[];
-};
-
 export const getImage = async (media: string) => {
   const res = await fetch(getMediaUrl(media));
   console.log(getMediaUrl(media));

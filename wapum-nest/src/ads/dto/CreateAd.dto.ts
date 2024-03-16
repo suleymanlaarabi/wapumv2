@@ -1,28 +1,25 @@
-import { Category, State, SubCategory } from '@prisma/client';
+import { State } from '@prisma/client';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class CreateAdDto {
   @IsString()
-  title: string; //
+  title: string;
 
   @IsString()
-  description: string; //
+  description: string;
 
   @IsNumber()
-  price: number; //
+  price: number;
 
-  @IsEnum(Category)
-  category: Category; //
+  @IsString()
+  category: string;
 
-  @IsEnum(SubCategory)
-  subCategory: SubCategory;
+  @IsString()
+  subCategory: string;
 
   @IsEnum(State)
   state: State;
 
   @IsString()
-  city: string; //
-
-  @IsNumber()
-  ZIP: number; //
+  location: string;
 }

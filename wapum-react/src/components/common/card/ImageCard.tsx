@@ -1,14 +1,15 @@
-import { Card, IconButton, Image } from "@chakra-ui/react";
+import { Card, ChakraProps, IconButton, Image } from "@chakra-ui/react";
 import { Trash } from "lucide-react";
 
 export type ImageCardProps = {
   src: string;
   onDelete?: () => void;
+  chakraProps?: ChakraProps;
 };
 
 export const ImageCard = (props: ImageCardProps) => {
   return (
-    <Card p={2}>
+    <Card p={2} position="relative" {...props.chakraProps}>
       <IconButton
         aria-label="Delete"
         icon={<Trash height={20} />}
@@ -21,8 +22,8 @@ export const ImageCard = (props: ImageCardProps) => {
       <Image
         src={props.src}
         alt="item"
-        w="200px"
-        h="200px"
+        w="100%"
+        h="100%"
         objectFit={"contain"}
         borderRadius="md"
       />

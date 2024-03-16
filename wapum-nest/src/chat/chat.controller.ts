@@ -5,8 +5,11 @@ import {
   Param,
   Post,
   Request,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { RequestWithAuthPayload } from 'src/auth/auth.controller';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateConversationDto } from 'src/chat/dto/create-conversation.dto';
@@ -37,15 +40,18 @@ export class ChatController {
 
   @UseGuards(JwtAuthGuard)
   @Post('send-chat/:conversationId')
+  @UseInterceptors(FilesInterceptor('images'))
   async sendMessage(
     @Param('conversationId') conversationId: string,
     @Body() sendChatDto: SendChatDto,
     @Request() request: RequestWithAuthPayload,
+    @UploadedFiles() images: Express.Multer.File[],
   ): Promise<SendChatResponse> {
     return await this.chatService.sendChat(
       sendChatDto,
       conversationId,
       request.user.userId,
+      images,
     );
   }
 

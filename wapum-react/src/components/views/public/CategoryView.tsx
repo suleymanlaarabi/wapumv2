@@ -29,7 +29,6 @@ export const CategoryView = () => {
             preview={ad.AdImages[0].id}
             title={ad.title}
             price={ad.price}
-            isNew
             key={ad.id}
           />
         ))}

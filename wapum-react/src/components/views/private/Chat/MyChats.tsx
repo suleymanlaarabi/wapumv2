@@ -69,6 +69,7 @@ export const MyChats = () => {
   const { data } = useQuery({
     queryKey: ["conversations"],
     queryFn: () => getConversations(),
+    refetchOnMount: true,
   });
 
   const queryClient = useQueryClient();
@@ -78,7 +79,7 @@ export const MyChats = () => {
     queryClient.setQueryData(["conversations"], () => {
       if (data) {
         return {
-          data: [...data.data, conversation],
+          data: [...data.data, conversation.data],
         };
       }
     });

@@ -1,4 +1,5 @@
 import {
+  Badge,
   Container,
   Flex,
   IconButton,
@@ -95,27 +96,32 @@ export const MessageListContainer = ({
         })}
       </Container>
       {haveNewMessage && (
-        <IconButton
-          aria-label=""
-          icon={<ArrowDown color="white" />}
-          bg={bgNewMessage}
-          _hover={{
-            bg: hoverBgNewMessage,
-          }}
-          h={"40px"}
-          w={"40px"}
-          minH={"40px"}
-          minW={"40px"}
-          borderRadius={"50%"}
-          position={"absolute"}
-          bottom={"85px"}
-          onClick={() => {
-            if (messageContainerRef.current) {
-              messageContainerRef.current.scrollTop =
-                messageContainerRef.current.scrollHeight;
-            }
-          }}
-        />
+        <>
+          <IconButton
+            mb={3}
+            aria-label=""
+            icon={<ArrowDown color="white" />}
+            bg={bgNewMessage}
+            _hover={{
+              bg: hoverBgNewMessage,
+            }}
+            h={"40px"}
+            w={"40px"}
+            minH={"40px"}
+            minW={"40px"}
+            borderRadius={"50%"}
+            position={"absolute"}
+            bottom={"85px"}
+            onClick={() => {
+              if (messageContainerRef.current) {
+                messageContainerRef.current.scrollTop =
+                  messageContainerRef.current.scrollHeight;
+              }
+            }}
+          />
+
+          <Badge transform={"translateY(-8px)"}>New Messages</Badge>
+        </>
       )}
     </>
   );

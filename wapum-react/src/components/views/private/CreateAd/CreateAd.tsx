@@ -26,8 +26,7 @@ export type FormAdData = {
   title: string;
   description: string;
   price: number;
-  city: string;
-  ZIP: number;
+  location: string;
   category: string;
   subCategory: string;
   condition: string;
@@ -51,6 +50,7 @@ export function CreateAd() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormAdData>();
 
   const onSubmit = (data: FormAdData) => {
@@ -114,7 +114,7 @@ export function CreateAd() {
           {step === 1 ? (
             <Form1 register={register} errors={errors} />
           ) : step === 2 ? (
-            <Form2 register={register} />
+            <Form2 setValue={setValue} />
           ) : (
             <Form3 files={files} setFiles={setFiles} />
           )}

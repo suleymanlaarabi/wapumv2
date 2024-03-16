@@ -1,75 +1,39 @@
-import {
-  FormControl,
-  FormLabel,
-  GridItem,
-  Heading,
-  Input,
-} from "@chakra-ui/react";
-import { UseFormRegister } from "react-hook-form";
+import { Heading } from "@chakra-ui/react";
+import AutoComplete from "react-google-autocomplete";
+import { UseFormSetValue } from "react-hook-form";
+import { GOOGLE_MAPS_API_KEY } from "../../../../data/dev.variable";
 import { FormAdData } from "./CreateAd";
 
 interface Form2Props {
-  register: UseFormRegister<FormAdData>;
+  setValue: UseFormSetValue<FormAdData>;
 }
 
-export default function Form2({ register }: Form2Props) {
+export default function Form2({ setValue }: Form2Props) {
   return (
     <>
       <Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
         Location Details
       </Heading>
 
-      <FormControl as={GridItem} colSpan={[6, 6, null, 2]}>
-        <FormLabel
-          htmlFor="city"
-          fontSize="sm"
-          fontWeight="md"
-          color="gray.700"
-          _dark={{
-            color: "gray.50",
-          }}
-          mt="2%"
-        >
-          City
-        </FormLabel>
-        <Input
-          type="text"
-          id="city"
-          autoComplete="city"
-          focusBorderColor="brand.400"
-          shadow="sm"
-          size="sm"
-          w="full"
-          rounded="md"
-          {...register("city")}
-        />
-      </FormControl>
-
-      <FormControl as={GridItem} colSpan={[6, 3, null, 2]}>
-        <FormLabel
-          htmlFor="postal_code"
-          fontSize="sm"
-          fontWeight="md"
-          color="gray.700"
-          _dark={{
-            color: "gray.50",
-          }}
-          mt="2%"
-        >
-          ZIP / Postal
-        </FormLabel>
-        <Input
-          type="number"
-          id="postal_code"
-          autoComplete="postal-code"
-          focusBorderColor="brand.400"
-          shadow="sm"
-          size="sm"
-          w="full"
-          rounded="md"
-          {...register("ZIP")}
-        />
-      </FormControl>
+      <AutoComplete
+        apiKey={GOOGLE_MAPS_API_KEY}
+        style={{
+          width: "100%",
+          height: "40px",
+          paddingLeft: "16px",
+          marginTop: "2%",
+          marginBottom: "2%",
+          border: "1px solid rgba(255,255,255,0.18)",
+          borderRadius: "5px",
+          backgroundColor: "transparent",
+        }}
+        aria-placeholder="Search for your location"
+        language="en"
+        lang="en"
+        onPlaceSelected={(place) => {
+          setValue("location", place.formatted_address as string);
+        }}
+      />
     </>
   );
 }

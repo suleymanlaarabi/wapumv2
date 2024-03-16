@@ -21,7 +21,9 @@ export class ChatService {
     sendChatDto: SendChatDto,
     conversationId: string,
     userId: string,
+    images: Express.Multer.File[],
   ): Promise<SendChatResponse> {
+    console.log(images);
     const [existingConversation, existingUser] = await Promise.all([
       this.prismaService.conversation.findUnique({
         where: { id: conversationId },

@@ -5,6 +5,7 @@ import { MyChats } from "../components/views/private/Chat/MyChats";
 import { CreateAd } from "../components/views/private/CreateAd/CreateAd";
 import { PrivateAuthChecker } from "../components/views/private/PrivateAuthChecker";
 import { Profile } from "../components/views/private/Profile/Profile";
+import { AdExplore } from "../components/views/public/AdExplore";
 import { AdView } from "../components/views/public/AdView";
 import { AuthChecker } from "../components/views/public/Auth/AuthChecker";
 import SignIn from "../components/views/public/Auth/SignIn";
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/explore",
+        element: <AdExplore />,
       },
       {
         path: "/ad/:id",

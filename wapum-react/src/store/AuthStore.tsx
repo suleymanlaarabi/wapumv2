@@ -67,7 +67,7 @@ export const useAuthStore: UseBoundStore<StoreApi<AuthStore>> = create(
           return;
         }
       } catch (error) {
-        console.log("Error", error);
+        set({ user: null });
       }
     },
   })

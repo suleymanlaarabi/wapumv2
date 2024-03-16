@@ -50,7 +50,9 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
-  async getAuthenticatedUser(@Request() req: RequestWithAuthPayload) {
+  async getAuthenticatedUser(
+    @Request() req: RequestWithAuthPayload,
+  ): Promise<any> {
     const data = await this.usersService.getUserById(req.user.userId);
     if (!data) throw new Error('User not found');
     return data;

@@ -11,10 +11,11 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { RequestWithAuthPayload } from 'src/auth/auth.controller';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { GetAdResponse } from '../wapum-types/ads/Response';
 import { AdsService } from './ads.service';
 import { CreateAdDto } from './dto/CreateAd.dto';
 import { GetAdsDto } from './dto/GetAds.dto';
-
+import { getFilteredAdsDto } from './dto/GetFilteredAds.dto';
 interface AddAdPictureRequest extends RequestWithAuthPayload {
   params: {
     adId: string;
@@ -49,17 +50,30 @@ export class AdsController {
   }
 
   @Get('ad/:id')
-  async getAd(@Request() req: { params: { id: string } }) {
+  async getAd(
+    @Request() req: { params: { id: string } },
+  ): Promise<GetAdResponse> {
     return await this.adsService.getAd(req.params.id);
   }
 
   @Get('category/:category')
-  async getAdsByCategory(@Request() req: { params: GetAdsDto }) {
+  async getAdsByCategory(
+    @Request() req: { params: GetAdsDto },
+  ): Promise<GetAdResponse[]> {
     return await this.adsService.getAdsByCategory(req.params.category);
   }
 
   @Get('latest/:category')
-  async getLatestAds(@Request() req: { params: GetAdsDto }) {
+  async getLatestAds(
+    @Request() req: { params: GetAdsDto },
+  ): Promise<GetAdResponse[]> {
     return await this.adsService.getLatestAds(req.params.category);
+  }
+
+  @Post('filter')
+  async getAdsWithF(
+    @Body() filter: getFilteredAdsDto,
+  ): Promise<GetAdResponse[]> {
+    return await this.adsService.getAdsWithFilter(filter);
   }
 }

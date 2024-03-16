@@ -1,7 +1,5 @@
 import {
-  Badge,
   Box,
-  Circle,
   Flex,
   Icon,
   Image,
@@ -15,12 +13,11 @@ import { getMediaUrl } from "../../../utils/urlParser";
 interface AdCardProps {
   title: string;
   price: number;
-  isNew?: boolean;
   preview: string;
   id: string;
 }
 
-function AdCard({ title, price, isNew, preview, id }: AdCardProps) {
+function AdCard({ title, price, preview, id }: AdCardProps) {
   return (
     <Flex
       as={NavLink}
@@ -30,46 +27,30 @@ function AdCard({ title, price, isNew, preview, id }: AdCardProps) {
       justifyContent="center"
       cursor={"pointer"}
       _hover={{
-        transform: "scale(1.03)",
+        transform: "scale(1.02)",
       }}
     >
       <Box
         bg={useColorModeValue("white", "gray.800")}
         maxW="sm"
-        w={"350px"}
-        h={"420px"}
+        w={{ base: "275px", md: "330px" }}
+        h={{ base: "390px", md: "450px" }}
         borderWidth="1px"
         rounded="lg"
         shadow="lg"
         position="relative"
         p={4}
       >
-        {isNew && (
-          <Circle
-            size="10px"
-            position="absolute"
-            top={1}
-            right={1}
-            bg={"blue.200"}
-          />
-        )}
-
         <Flex p={2} justifyContent="center" alignContent="center">
           <Image
-            h={"250px"}
+            h={"25%"}
             objectFit={"cover"}
             src={getMediaUrl(preview)}
             rounded="lg"
           />
         </Flex>
         <Box p="6">
-          <Box display="flex" alignItems="baseline">
-            {isNew && (
-              <Badge rounded="full" px="2" fontSize="0.8em">
-                New
-              </Badge>
-            )}
-          </Box>
+          <Box display="flex" alignItems="baseline"></Box>
           <Flex mt="1" justifyContent="space-between" alignContent="center">
             <Box
               fontSize="2xl"

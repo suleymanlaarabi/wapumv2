@@ -1,6 +1,16 @@
-import { Box, Container, Flex, Heading, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  Spinner,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { Search } from "lucide-react";
+import { NavLink } from "react-router-dom";
 import { AdPreview, getHomeAds } from "../../../services/api/ad-api";
 import { categories } from "../../../wapum-types/ads/Ads.types";
 import AdCard from "../../common/card/AdCard";
@@ -13,14 +23,22 @@ export const HomeCardList = ({ cards }: { cards: AdPreview[] }) => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Flex py={8} w="100%" gap={4} overflowX={"scroll"}>
+      <Flex
+        p={{
+          base: 0,
+          md: 8,
+        }}
+        py={4}
+        w="100%"
+        gap={4}
+        overflowX={"scroll"}
+      >
         {cards.map((ad) => (
           <AdCard
             id={ad.id}
             preview={ad.AdImages[0].id}
             title={ad.title}
             price={ad.price}
-            isNew
             key={ad.id}
           />
         ))}
@@ -43,7 +61,14 @@ export const Home = () => {
       ) : (
         <>
           <Heading m={4}>Top Categories</Heading>
-          <Flex p={4} mt={4} w="100%" gap={4} overflowX={"scroll"}>
+          <Flex
+            bg={"transparent"}
+            p={4}
+            mt={4}
+            w="100%"
+            gap={4}
+            overflowX={"scroll"}
+          >
             {categories.map((category) => (
               <CategoryCard name={category} key={category} />
             ))}
@@ -67,6 +92,20 @@ export const Home = () => {
           </Box>
         </>
       )}
+      <IconButton
+        aria-label=""
+        icon={<Search />}
+        position="fixed"
+        bottom={4}
+        right={4}
+        h={16}
+        w={16}
+        borderRadius="full"
+        bg={useColorModeValue("gray.200", "gray.700")}
+        _hover={{ bg: useColorModeValue("gray.300", "gray.600") }}
+        as={NavLink}
+        to={"/explore"}
+      />
     </Container>
   );
 };

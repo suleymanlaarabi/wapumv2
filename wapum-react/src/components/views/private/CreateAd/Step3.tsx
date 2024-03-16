@@ -50,6 +50,10 @@ export default function Form3({ files, setFiles }: Props) {
             onDelete={() => {
               setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
             }}
+            chakraProps={{
+              w: "250px",
+              h: "250px",
+            }}
           />
         ))}
       </Flex>
